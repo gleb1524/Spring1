@@ -20,10 +20,7 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        this.productRepository = new ProductRepository();
-        for (int i = 1; i <= 10; i++) {
-            this.productRepository.insert(new Product("Product " + i, (int) (Math.random() * (i + 100))));
-        }
+        this.productRepository = (ProductRepository) getServletContext().getAttribute("productRepository");
     }
 
     @Override
