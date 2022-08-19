@@ -25,11 +25,27 @@ public class ProductController {
         model.addAttribute("product", productRepository.findById(id));
         return "product_form";
     }
+    @GetMapping("/new")
+    public String form(Model model) {
+        model.addAttribute("product", new Product("", 0));
+        return "product_form";
+    }
 
     @PostMapping
     public String saveProduct(Product product) {
         productRepository.update(product);
         return "redirect:/product";
     }
+
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable("id") long id){
+       productRepository.delete(id);
+        return "redirect:/product";
+    }
+//    @PostMapping("/new")
+//    public String addProduct(Product product) {
+//        productRepository.update(product);
+//        return "redirect:/product";
+//    }
 
 }

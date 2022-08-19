@@ -40,6 +40,9 @@ public class ProductRepository {
     }
 
     public void update(Product product) {
+        if(product.getId() == null){
+            product.setId(identity.incrementAndGet());
+        }
         productMap.put(product.getId(), product);
     }
 

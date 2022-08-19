@@ -20,9 +20,9 @@ public class AddProductController {
         return "add_product";
     }
 
-    @PostMapping (params = {"title", "cost"})
-    public String addProduct(@PathVariable("title") String title, @PathVariable("cost") long cost){
-        productRepository.insert(new Product(title, cost));
+    @PostMapping ()
+    public String addProduct(Product product){
+        productRepository.insert(product);
         return "redirect:/product";
     }
 }
