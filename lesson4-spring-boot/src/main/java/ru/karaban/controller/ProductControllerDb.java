@@ -6,35 +6,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.karaban.persist.Product;
-import ru.karaban.persist.ProductRepository;
 import ru.karaban.service.ProductService;
 
 import javax.validation.Valid;
 
 @Slf4j
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/productDb")
 @RequiredArgsConstructor
-public class ProductController {
-
-
-    private final ProductRepository productRepository;
+public class ProductControllerDb {
 
     @Autowired
     private ProductService productService;
 
-    @GetMapping
-    public String listPage(Model model) {
-        model.addAttribute("products", productRepository.findAll());
+    @GetMapping()
+    public String listPageDb(Model model) {
+        model.addAttribute("products", productService.getUserDetails());
         return "product";
     }
 
+    @GetMapping("/delete/{id}")
+    public String deleteByIdDb(@PathVariable long id) {
+        productService.deleteProduct(id);
+        return "redirect:/productDb";
+    }
 
     @GetMapping("/{id}")
     public String form(@PathVariable("id") long id, Model model) {
-        model.addAttribute("product", productRepository.findById(id));
+        model.addAttribute("product", productService.findById(id));
         return "product_form";
     }
 
@@ -44,28 +48,12 @@ public class ProductController {
         return "product_form";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteProductById(@PathVariable long id) {
-        productRepository.delete(id);
-        return "redirect:/product";
-    }
-
-    @PostMapping
-    public String saveProduct(@Valid Product product, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "product_form";
-        }
-        productRepository.update(product);
-        return "redirect:/product";
-    }
-
-    @PostMapping("/update")
+    @PostMapping()
     public String updateProduct(@Valid Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "product_form";
         }
-        productRepository.update(product);
-        return "redirect:/product";
+        productService.update(product);
+        return "redirect:/productDb";
     }
-
 }

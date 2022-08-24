@@ -1,6 +1,8 @@
 package ru.karaban.persist;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import ru.karaban.service.ProductService;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -15,6 +17,9 @@ public class ProductRepository {
 
     private final AtomicLong identity = new AtomicLong(0);
 
+    @Autowired
+    private ProductService productService;
+
     @PostConstruct
     public void init(){
         this.insert(new Product("Product 1", 1000));
@@ -22,6 +27,7 @@ public class ProductRepository {
         this.insert(new Product("Product 3", 3000));
         this.insert(new Product("Product 4", 4000));
         this.insert(new Product("Product 5", 5000));
+        productService.insert();
     }
 
     public List<Product> findAll(){
