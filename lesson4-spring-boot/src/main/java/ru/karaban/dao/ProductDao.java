@@ -39,7 +39,7 @@ public class ProductDao {
 
     }
 
-    public List<Product> getUserDetails() {
+    public List<Product> getProductDetails() {
         return executeForEntityManager(entityManager -> entityManager.
                 createNamedQuery("findAllProducts", Product.class).getResultList());
     }

@@ -26,7 +26,7 @@ public class ProductControllerDb {
 
     @GetMapping()
     public String listPageDb(Model model) {
-        model.addAttribute("products", productService.getUserDetails());
+        model.addAttribute("products", productService.getProductDetails());
         return "product";
     }
 

@@ -15,14 +15,11 @@ public class ProductService {
     @Autowired
     private ProductDao productDao;
 
-    public List<Product> getUserDetails() {
-        return productDao.getUserDetails();
+    public List<Product> getProductDetails() {
+        return productDao.getProductDetails();
 
     }
 
-    public void insert() {
-        productDao.insertProductDb();
-    }
 
     public void deleteProduct(Long id) {
         productDao.deleteProductDb(id);
