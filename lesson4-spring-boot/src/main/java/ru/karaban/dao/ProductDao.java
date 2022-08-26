@@ -4,8 +4,10 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.karaban.persist.Product;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.Column;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,12 +19,19 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@Component
+@Repository
 public class ProductDao {
 
     @Autowired
     private EntityManagerFactory entityManagerFactory;
 
+    @PostConstruct
+    public void insertProductDb() {
+        if (countProduct() == 0) {
+            executeInTransaction(entityManager -> entityManager.
+                    persist(new Product("ProductDB1", 1000L)));
+        }
+    }
 
     public Optional<Product> findById(long id) {
         return Optional.ofNullable(executeForEntityManager(entityManager ->
@@ -38,13 +47,6 @@ public class ProductDao {
     public Long countProduct() {
         return executeForEntityManager(entityManager -> entityManager.
                 createNamedQuery("countAllProducts", Long.class).getSingleResult());
-    }
-
-    public void insertProductDb() {
-        if (countProduct() == 0) {
-            executeInTransaction(entityManager -> entityManager.
-                    persist(new Product("ProductDB1", 1000L)));
-        }
     }
 
     public void deleteProductDb(Long id) {

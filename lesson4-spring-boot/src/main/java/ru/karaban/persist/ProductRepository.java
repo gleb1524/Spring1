@@ -27,7 +27,6 @@ public class ProductRepository {
         this.insert(new Product("Product 3", 3000));
         this.insert(new Product("Product 4", 4000));
         this.insert(new Product("Product 5", 5000));
-        productService.insert();
     }
 
     public List<Product> findAll(){
