@@ -13,6 +13,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Component
 public class ProductDao {
@@ -20,67 +23,66 @@ public class ProductDao {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
 
-    public void insertProductDb() {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
 
-        List<Product> users = entityManager.createQuery("select p from Product p", Product.class)
-                .getResultList();
-        if (users.size() == 0) {
+    public Optional<Product> findById(long id) {
+        return Optional.ofNullable(executeForEntityManager(entityManager ->
+                entityManager.find(Product.class, id)));
 
-            entityManager.persist(new Product("ProductDB1", 1000L));
-            entityManager.persist(new Product("ProductDB2", 10001L));
-            entityManager.persist(new Product("ProductDB3", 10002L));
-
-        }
-        entityManager.getTransaction().commit();
-        entityManager.close();
     }
 
-    public List getUserDetails() {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        List<Product> users = entityManager.createQuery("select p from Product p", Product.class)
-                .getResultList();
+    public List<Product> getUserDetails() {
+        return executeForEntityManager(entityManager -> entityManager.
+                createNamedQuery("findAllProducts", Product.class).getResultList());
+    }
 
-        return users;
+    public Long countProduct() {
+        return executeForEntityManager(entityManager -> entityManager.
+                createNamedQuery("countAllProducts", Long.class).getSingleResult());
+    }
+
+    public void insertProductDb() {
+        if (countProduct() == 0) {
+            executeInTransaction(entityManager -> entityManager.
+                    persist(new Product("ProductDB1", 1000L)));
+        }
     }
 
     public void deleteProductDb(Long id) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-        entityManager.getTransaction().begin();
-
-        Product product = entityManager.find(Product.class, id);
-        entityManager.remove(product);
-
-        entityManager.getTransaction().commit();
-        entityManager.close();
-
-    }
-
-    public Product findById(long id) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        return entityManager.find(Product.class, id);
+        executeInTransaction(entityManager ->
+                entityManager.createNamedQuery("deleteProductById").
+                        setParameter("id", id).executeUpdate());
     }
 
     public void update(Product product) {
+        executeInTransaction(entityManager -> {
+            if (product.getId() == null) {
+                entityManager.persist(product);
+            } else {
+                entityManager.merge(product);
+            }
+        });
+    }
+
+    private <R> R executeForEntityManager(Function<EntityManager, R> function) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
-
-
-        if (product.getId() == null) {
-            entityManager.persist(new Product(product.getTitle(),
-                    product.getCost(),
-                    product.getAmount(),
-                    product.getDiscount(),
-                    product.getDateAdded()
-            ));
-        } else {
-            entityManager.merge(product);
+        try {
+            return function.apply(entityManager);
+        } finally {
+            entityManager.close();
         }
+    }
 
-        entityManager.getTransaction().commit();
-        entityManager.close();
+    private void executeInTransaction(Consumer<EntityManager> consumer) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            consumer.accept(entityManager);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+        } finally {
+            entityManager.close();
+        }
     }
 
 }

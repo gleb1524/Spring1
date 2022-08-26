@@ -6,6 +6,7 @@ import ru.karaban.dao.ProductDao;
 import ru.karaban.persist.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -27,7 +28,7 @@ public class ProductService {
         productDao.deleteProductDb(id);
     }
 
-    public Product findById(long id) {
+    public Optional<Product> findById(long id) {
         return productDao.findById(id);
     }
 

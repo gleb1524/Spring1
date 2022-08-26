@@ -14,6 +14,11 @@ import java.util.Date;
 @Entity()
 @Table(name = "PRODUCTS")
 @NoArgsConstructor
+@NamedQueries({
+        @NamedQuery(name = "findAllProducts", query = "Select p from Product p"),
+        @NamedQuery(name = "countAllProducts", query = "Select count(p) from Product p"),
+        @NamedQuery(name = "deleteProductById", query = "delete from Product p where p.id = :id")
+})
 public class Product {
 
     @Id
