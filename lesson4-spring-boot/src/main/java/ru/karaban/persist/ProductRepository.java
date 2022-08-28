@@ -1,6 +1,8 @@
 package ru.karaban.persist;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import ru.karaban.service.ProductService;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -14,6 +16,9 @@ public class ProductRepository {
     private final Map<Long, Product> productMap = new ConcurrentHashMap<>();
 
     private final AtomicLong identity = new AtomicLong(0);
+
+    @Autowired
+    private ProductService productService;
 
     @PostConstruct
     public void init(){

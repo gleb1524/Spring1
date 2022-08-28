@@ -35,7 +35,7 @@
 <div class="container">
     <div class="row py-2">
         <div class="col-12">
-            <!--            <a class="btn btn-success" method="post" th:href="@{product/add}">Add Product</a>-->
+            <!--            <a class="btn btn-success" method="post" th:href="@{product/add}">Add ru.karaban.persist.Product</a>-->
             <a class="btn btn-success" th:href="@{/product/new}">Add Product</a>
 
         </div>
@@ -62,8 +62,8 @@
                     <td th:text="${product.discount}">10</td>
                     <td th:text="${product.dateAdded}">10-10-2020</td>
                     <td>
-                        <a class="btn btn-success" th:href="@{/product/{id}(id = ${product.id})}"><i class="fas fa-edit"></i></a>
-                        <a class="btn btn-danger"  th:href="@{/product/delete/{id}(id = ${product.id})}"><i class="far fa-trash-alt"></i></a>
+                        <a class="btn btn-success" th:href="@{/productDb/{id}(id = ${product.id})}"><i class="fas fa-edit"></i></a>
+                        <a class="btn btn-danger"  th:href="@{/productDb/delete/{id}(id = ${product.id})}"><i class="far fa-trash-alt"></i></a>
                     </td>
                 </tr>
                 </tbody>

@@ -35,7 +35,7 @@
 <div class="container">
     <div class="row py-2">
         <div class="col-12">
-            <form  th:action="@{/product}" method="post" th:object="${product}">
+            <form  th:action="@{/productDb}" method="post" th:object="${product}">
                 <input th:field="*{id}" type="hidden" id="id" name="id" >
                 <div class="form-group">
                     <label>Title</label>
