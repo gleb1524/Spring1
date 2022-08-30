@@ -5,7 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,7 +24,12 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    public User(String name) {
+    public User(String name, List<Product> products) {
         this.name = name;
+        this.products = products;
+
     }
+
+    @ManyToMany
+    private List<Product> products;
 }
