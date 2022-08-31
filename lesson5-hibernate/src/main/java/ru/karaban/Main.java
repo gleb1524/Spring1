@@ -23,11 +23,11 @@ public class Main {
         FindByIdService findByIdService = context.getBean("findByIdService", FindByIdService.class);
         FactoryController factoryController = context.getBean("factoryController", FactoryController.class);
 
-        productDao.init();
-        userDao.init();
+//        productDao.init();
+//        userDao.init();
 
 
-        findByIdService.getProductForUserId(2);
+        findByIdService.getProductForUserId(1);
         findByIdService.getUserForProductId(2);
     }
 }
