@@ -4,14 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.karaban.homework.dao.ProductRepository;
 import ru.karaban.homework.persist.Product;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -24,8 +22,22 @@ public class ProductController {
     private final ProductRepository productDao;
 
     @GetMapping
-    public String listPage(Model model) {
-        model.addAttribute("products", productDao.findAll());
+    public String listPage(@RequestParam Optional<String> titleFilter,
+                           @RequestParam Optional<BigDecimal> costFilter,
+                           Model model) {
+        if(titleFilter.isEmpty() || titleFilter.get().isBlank()){
+            model.addAttribute("products", productDao.findAll());
+        }else{
+            model.addAttribute("products",
+                    productDao.findAllByTitleLike("%" + titleFilter.get() +"%"));
+        }
+        if(costFilter.isEmpty()){
+            model.addAttribute("products", productDao.findAll());
+        }else{
+            model.addAttribute("products",
+                    productDao.findAllByCostLike( costFilter.get() ));
+        }
+
         return "product";
     }
 
