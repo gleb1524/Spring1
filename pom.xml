@@ -23,6 +23,7 @@
         <module>lesson3-spring-mvc</module>
         <module>lesson4-spring-boot</module>
         <module>lesson5-hibernate</module>
+        <module>lesson7-spring-boot-hibernate</module>
     </modules>
 
     <dependencies>
