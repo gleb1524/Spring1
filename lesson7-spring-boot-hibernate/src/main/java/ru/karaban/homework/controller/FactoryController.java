@@ -23,12 +23,12 @@ public class FactoryController {
     }
 
     public List<?> findAll() {
-      return   executeForEntityManager(entityManager -> {
+        return executeForEntityManager(entityManager -> {
             return entityManager.createQuery("select p from Product p ", Product.class).getResultList();
         });
     }
 
-    public void creatOrUpdateProduct(Product product){
+    public void creatOrUpdateProduct(Product product) {
         executeInTransaction(entityManager -> {
             entityManager.merge(product);
         });
@@ -40,12 +40,19 @@ public class FactoryController {
         });
     }
 
-    public void deleteProduct(long id){
+    public void deleteProduct(long id) {
         executeInTransaction(entityManager -> {
-            Product product = entityManager.find(Product.class, id);
-            entityManager.remove(product);
+            entityManager.createQuery("delete from Product p where p.id = :id")
+                    .setParameter("id", id).executeUpdate();
         });
     }
+
+    public int productListSize() {
+        return executeForEntityManager(entityManager ->
+                entityManager.createQuery("select p from Product p")
+                        .getResultList().size());
+    }
+
 
     private void executeInTransaction(Consumer<EntityManager> consumer) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();

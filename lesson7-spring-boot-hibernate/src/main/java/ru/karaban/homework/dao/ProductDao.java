@@ -20,24 +20,25 @@ public class ProductDao {
         return factoryController.findById(id);
     }
 
-    public List<Product> findAll(){
+    public List<Product> findAll() {
         return (List<Product>) factoryController.findAll();
     }
 
-    public void addNewProduct(Product product){
+    public void addNewProduct(Product product) {
         factoryController.creatOrUpdateProduct(product);
     }
 
-    public void deleteProduct(long id){
+    public void deleteProduct(long id) {
         factoryController.deleteProduct(id);
     }
 
     @PostConstruct
     public void initializationTestDateProduct() {
-        for (int i = 1; i <= 20; i++) {
-            Product product = new Product("Product" + i, new BigDecimal(i));
-            factoryController.initialization(product);
+        if (factoryController.productListSize() < 5) {
+            for (int i = 1; i <= 20; i++) {
+                Product product = new Product("Product" + i, new BigDecimal(i));
+                factoryController.initialization(product);
+            }
         }
-
     }
 }
