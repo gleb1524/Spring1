@@ -2,14 +2,13 @@ package ru.karaban.homework.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.karaban.homework.dao.ProductDao;
+import ru.karaban.homework.dao.ProductRepository;
 import ru.karaban.homework.persist.Product;
 
 import java.math.BigDecimal;
@@ -18,10 +17,11 @@ import java.math.BigDecimal;
 @Controller
 @RequestMapping("/product")
 @RequiredArgsConstructor
-public class ProductRestController {
+public class ProductController {
 
-    @Autowired
-    private ProductDao productDao;
+//    @Autowired
+//    private ProductDao productDao;
+    private final ProductRepository productDao;
 
     @GetMapping
     public String listPage(Model model) {
@@ -37,7 +37,7 @@ public class ProductRestController {
 
     @PostMapping
     public String creatOrUpdate(Product product){
-        productDao.addNewProduct(product);
+        productDao.save(product);
         return "redirect:/product";
     }
 
@@ -49,7 +49,7 @@ public class ProductRestController {
 
     @GetMapping("/delete/{id}")
     public String deleteByIdDb(@PathVariable long id) {
-        productDao.deleteProduct(id);
+        productDao.deleteById(id);
         return "redirect:/product";
     }
 }
