@@ -1,19 +1,17 @@
-package ru.karaban.homework.controller;
+package ru.karaban.homework.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import ru.karaban.homework.persist.Product;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@Controller
-public class FactoryController {
+@Service
+public class FactoryService {
 
     @Autowired
     private EntityManagerFactory entityManagerFactory;

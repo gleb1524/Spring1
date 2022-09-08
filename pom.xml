@@ -11,8 +11,8 @@
     <packaging>pom</packaging>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>5.3.22</spring.version>
     </properties>
@@ -24,6 +24,7 @@
         <module>lesson4-spring-boot</module>
         <module>lesson5-hibernate</module>
         <module>lesson7-spring-boot-hibernate</module>
+
     </modules>
 
     <dependencies>

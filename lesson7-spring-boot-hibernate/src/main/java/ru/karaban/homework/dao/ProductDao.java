@@ -2,7 +2,7 @@ package ru.karaban.homework.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.karaban.homework.controller.FactoryController;
+import ru.karaban.homework.service.FactoryService;
 import ru.karaban.homework.persist.Product;
 
 import javax.annotation.PostConstruct;
@@ -13,31 +13,31 @@ import java.util.List;
 public class ProductDao {
 
     @Autowired
-    private FactoryController factoryController;
+    private FactoryService factoryService;
 
 
     public Product findById(long id) {
-        return factoryController.findById(id);
+        return factoryService.findById(id);
     }
 
     public List<Product> findAll() {
-        return (List<Product>) factoryController.findAll();
+        return (List<Product>) factoryService.findAll();
     }
 
     public void addNewProduct(Product product) {
-        factoryController.creatOrUpdateProduct(product);
+        factoryService.creatOrUpdateProduct(product);
     }
 
     public void deleteProduct(long id) {
-        factoryController.deleteProduct(id);
+        factoryService.deleteProduct(id);
     }
 
     @PostConstruct
     public void initializationTestDateProduct() {
-        if (factoryController.productListSize() < 5) {
+        if (factoryService.productListSize() < 5) {
             for (int i = 1; i <= 20; i++) {
                 Product product = new Product("Product" + i, new BigDecimal(i));
-                factoryController.initialization(product);
+                factoryService.initialization(product);
             }
         }
     }
