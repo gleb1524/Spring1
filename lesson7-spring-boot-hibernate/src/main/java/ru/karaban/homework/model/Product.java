@@ -1,9 +1,9 @@
-package ru.karaban.homework.persist;
+package ru.karaban.homework.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.repository.query.Param;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "products")
 public class Product {
 

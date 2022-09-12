@@ -1,17 +1,17 @@
 package ru.karaban.homework.controller;
 
-import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.karaban.homework.dao.ProductRepository;
-import ru.karaban.homework.persist.Product;
-import ru.karaban.homework.persist.QProduct;
+import ru.karaban.homework.model.Product;
+import ru.karaban.homework.model.dto.ProductDto;
+import ru.karaban.homework.service.ProductService;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -21,7 +21,7 @@ public class ProductController {
 
 //    @Autowired
 //    private ProductDao productDao;
-    private final ProductRepository productDao;
+    private final ProductService service;
 
 //    @GetMapping
 //    public String listPage(@RequestParam(required = false) String titleFilter,
@@ -38,42 +38,38 @@ public class ProductController {
                            @RequestParam(required = false) BigDecimal costFilter,
                                                       Model model) {
 
-        QProduct product = QProduct.product;
-        BooleanBuilder predicate = new BooleanBuilder();
 
-        if(titleFilter != null && !titleFilter.isBlank()){
-            predicate.and(product.title.contains(titleFilter.trim()));
-        }
 
-        if(costFilter != null){
-            predicate.and(product.cost.eq(costFilter));
-        }
 
-        model.addAttribute("products", productDao.findAll(predicate));
+        model.addAttribute("products", service.findAllByFilter(titleFilter, costFilter));
         return "product";
     }
 
     @GetMapping("/{id}")
     public String form(@PathVariable("id") long id, Model model) {
-        model.addAttribute("product", productDao.findById(id));
+        model.addAttribute("product", service.findProductById(id));
         return "product_form";
     }
 
-    @PostMapping
-    public String creatOrUpdate(Product product){
-        productDao.save(product);
+    @PostMapping()
+    public String creatOrUpdate(@Valid @ModelAttribute("product") ProductDto dto, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return "product_form";
+        }
+        service.save(dto);
         return "redirect:/product";
     }
 
+
     @GetMapping("/new")
     public String addNewProduct(Model model) {
-        model.addAttribute("product", new Product("", BigDecimal.ZERO));
+        model.addAttribute("product", new ProductDto());
         return "product_form";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteByIdDb(@PathVariable long id) {
-        productDao.deleteById(id);
+        service.deleteProductById(id);
         return "redirect:/product";
     }
 }
