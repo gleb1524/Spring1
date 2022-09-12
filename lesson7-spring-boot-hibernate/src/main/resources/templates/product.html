@@ -80,12 +80,42 @@
                     <td th:text="${product.cost}">10</td>
 
                     <td>
-                        <a class="btn btn-success" th:href="@{/product/{id}(id = ${product.id})}"><i class="fas fa-edit"></i></a>
-                        <a class="btn btn-danger"  th:href="@{/product/delete/{id}(id = ${product.id})}"><i class="far fa-trash-alt"></i></a>
+                        <a class="btn btn-success" th:href="@{/product/{id}(id = ${product.id})}"><i
+                                class="fas fa-edit"></i></a>
+                        <a class="btn btn-danger" th:href="@{/product/delete/{id}(id = ${product.id})}"><i
+                                class="far fa-trash-alt"></i></a>
                     </td>
                 </tr>
                 </tbody>
             </table>
+        </div>
+        <div th:unless="${products.isEmpty()}" class="col-12">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li th:classappend="${products.isFirst()} ? 'disabled'"
+                        class="page-item">
+                        <a class="page-link"
+                           th:href="@{/product(page=${products.number}, size=${products.size})}">
+                            Previous
+                        </a>
+                    </li>
+
+                    <li th:each="num : ${#numbers.sequence(1, products.totalPages)}"
+                        th:classappend="${num == products.number +1} ? 'active'"
+                        class="page-item">
+                        <a class="page-link" th:href="@{/product(page=${num}, size=${products.size})}">[[${num}]]
+                            <span th:if="${num == products.number + 1}" class="sr-only">(current)</span>
+                        </a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${products.isLast()} ? 'disabled'">
+                        <a class="page-link"
+                           th:href="@{/product(page=${products.number + 2}, size=${products.size})}">
+                            Next
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>

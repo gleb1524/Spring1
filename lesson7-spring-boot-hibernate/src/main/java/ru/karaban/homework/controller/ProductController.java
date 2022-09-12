@@ -6,12 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.karaban.homework.model.Product;
 import ru.karaban.homework.model.dto.ProductDto;
 import ru.karaban.homework.service.ProductService;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -19,11 +19,11 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class ProductController {
 
-//    @Autowired
+    //    @Autowired
 //    private ProductDao productDao;
     private final ProductService service;
 
-//    @GetMapping
+    //    @GetMapping
 //    public String listPage(@RequestParam(required = false) String titleFilter,
 //                           @RequestParam(required = false) BigDecimal costFilter,
 //                                                      Model model) {
@@ -36,12 +36,13 @@ public class ProductController {
     @GetMapping
     public String listPage(@RequestParam(required = false) String titleFilter,
                            @RequestParam(required = false) BigDecimal costFilter,
-                                                      Model model) {
+                           @RequestParam(required = false) Optional<Integer> page,
+                           @RequestParam(required = false) Optional<Integer> size,
+                           Model model) {
+        int pageValue = page.orElse(1) - 1;
+        int sizeValue = size.orElse(5);
 
-
-
-
-        model.addAttribute("products", service.findAllByFilter(titleFilter, costFilter));
+        model.addAttribute("products", service.findAllByFilter(titleFilter, costFilter, pageValue, sizeValue));
         return "product";
     }
 
@@ -52,8 +53,8 @@ public class ProductController {
     }
 
     @PostMapping()
-    public String creatOrUpdate(@Valid @ModelAttribute("product") ProductDto dto, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
+    public String creatOrUpdate(@Valid @ModelAttribute("product") ProductDto dto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return "product_form";
         }
         service.save(dto);

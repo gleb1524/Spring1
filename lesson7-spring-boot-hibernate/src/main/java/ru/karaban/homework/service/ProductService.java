@@ -2,6 +2,8 @@ package ru.karaban.homework.service;
 
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.karaban.homework.dao.ProductRepository;
 import ru.karaban.homework.model.Product;
@@ -22,20 +24,9 @@ public class ProductService {
     private final ProductRepository repository;
     private final ProductDtoMapper mapper;
 
-    public List<ProductDto> findAllByFilter(String titleFilter, BigDecimal costFilter) {
-
-        QProduct product = QProduct.product;
-        BooleanBuilder predicate = new BooleanBuilder();
-        if (titleFilter != null && !titleFilter.isBlank()) {
-            predicate.and(product.title.contains(titleFilter.trim()));
-        }
-
-        if (costFilter != null) {
-            predicate.and(product.cost.eq(costFilter));
-        }
-        return StreamSupport.stream(repository.findAll(predicate).spliterator(), true)
-                .map(mapper::map)
-                .collect(Collectors.toList());
+    public Page<ProductDto> findAllByFilter(String titleFilter, BigDecimal costFilter, int page, int size) {
+        titleFilter = titleFilter == null || titleFilter.isBlank() ? null : "%" + titleFilter.trim() + "%";
+        return repository.productByFilter(titleFilter, costFilter, PageRequest.of(page, size)).map(mapper::map);
     }
 
     public Optional<ProductDto> findProductById(Long id) {
