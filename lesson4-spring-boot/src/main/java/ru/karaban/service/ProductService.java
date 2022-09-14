@@ -2,8 +2,8 @@ package ru.karaban.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.karaban.dao.ProductDao;
 import ru.karaban.persist.Product;
+import ru.karaban.homework.dao.ProductDao;
 
 import java.util.List;
 import java.util.Optional;
