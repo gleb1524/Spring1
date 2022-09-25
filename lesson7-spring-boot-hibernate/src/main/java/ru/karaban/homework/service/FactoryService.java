@@ -2,7 +2,7 @@ package ru.karaban.homework.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.karaban.homework.persist.Product;
+import ru.karaban.homework.model.Product;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -16,32 +16,10 @@ public class FactoryService {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
 
-    public Product findById(long id) {
-        return executeForEntityManager(entityManager -> entityManager.find(Product.class, id));
-    }
-
-    public List<?> findAll() {
-        return executeForEntityManager(entityManager -> {
-            return entityManager.createQuery("select p from Product p ", Product.class).getResultList();
-        });
-    }
-
-    public void creatOrUpdateProduct(Product product) {
-        executeInTransaction(entityManager -> {
-            entityManager.merge(product);
-        });
-    }
 
     public <R> void initialization(R r) {
         executeInTransaction(entityManager -> {
             entityManager.persist(r);
-        });
-    }
-
-    public void deleteProduct(long id) {
-        executeInTransaction(entityManager -> {
-            entityManager.createQuery("delete from Product p where p.id = :id")
-                    .setParameter("id", id).executeUpdate();
         });
     }
 

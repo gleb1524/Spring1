@@ -3,7 +3,7 @@ package ru.karaban.homework.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.karaban.homework.service.FactoryService;
-import ru.karaban.homework.persist.Product;
+import ru.karaban.homework.model.Product;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -14,23 +14,6 @@ public class ProductDao {
 
     @Autowired
     private FactoryService factoryService;
-
-
-    public Product findById(long id) {
-        return factoryService.findById(id);
-    }
-
-    public List<Product> findAll() {
-        return (List<Product>) factoryService.findAll();
-    }
-
-    public void addNewProduct(Product product) {
-        factoryService.creatOrUpdateProduct(product);
-    }
-
-    public void deleteProduct(long id) {
-        factoryService.deleteProduct(id);
-    }
 
     @PostConstruct
     public void initializationTestDateProduct() {
