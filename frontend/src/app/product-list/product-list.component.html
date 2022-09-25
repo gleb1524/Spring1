@@ -1,7 +1,7 @@
 <div class="row py-2">
   <div class="col-12">
     <!--            <a class="btn btn-success" method="post" th:href="@{product/add}">Add ru.karaban.persist.Product</a>-->
-    <a class="btn btn-success" href="#">Add Product</a>
+    <a class="btn btn-success" href="/product/null">Add Product</a>
 
   </div>
 
@@ -16,13 +16,13 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Milk</td>
-        <td>100</td>
+      <tr *ngFor="let product of products">
+        <th scope="row">{{product.id}}</th>
+        <td>{{product.title}}</td>
+        <td>{{product.cost}}</td>
         <td>
-          <a class="btn btn-success" href="#"><i class="fas fa-edit"></i></a>
-          <a class="btn btn-danger"  href="#"><i class="far fa-trash-alt"></i></a>
+          <a class="btn btn-success" routerLink="/product/{{product.id}}"><i class="fas fa-edit"></i></a>
+          <a class="btn btn-danger"  (click)="delete(product.id)"><i class="far fa-trash-alt"></i></a>
         </td>
       </tr>
       </tbody>

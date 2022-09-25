@@ -19,9 +19,10 @@ import java.util.stream.Collectors;
 public class ProductResource {
 
     private final ProductService productService;
+    private Long productDtoId;
 
     @GetMapping
-    public List<ProductDto> listPage(@RequestParam(required = false) String titleFilter,
+    public Page<ProductDto> listPage(@RequestParam(required = false) String titleFilter,
                                      @RequestParam(required = false) BigDecimal costFilter,
                                      @RequestParam(required = false) Optional<Integer> page,
                                      @RequestParam(required = false) Optional<Integer> size
@@ -30,20 +31,36 @@ public class ProductResource {
     }
 
     @GetMapping("/{id}")
-    public ProductDto form(@PathVariable("id") long id) {
+    public ProductDto form(@PathVariable("id") Long id) {
+        productDtoId = id;
         ProductDto productDto = productService.findProductById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
         return productDto;
     }
 
-    @GetMapping("/new")
-    public ProductDto addNewProduct(@RequestBody ProductDto productDto) {
+
+    @PostMapping
+    public ProductDto saveProduct(@RequestBody ProductDto productDto) {
+        if(productDto.getId() != null){
+            throw new IllegalArgumentException("Created product shouldn`t have id");
+        }
         productService.save(productDto);
         return productDto;
     }
+    @PutMapping
+    public ProductDto updateProduct(@RequestBody ProductDto productDto) {
+        try {
+            productDto.setId(productDtoId);
+            productService.save(productDto);
+        } catch (RuntimeException e) {
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
+        return productDto;
+    }
 
-    @GetMapping("/delete/{id}")
-    public List<ProductDto> deleteByIdDb(@PathVariable long id,
+
+    @DeleteMapping ()
+    public Page<ProductDto> deleteByIdDb(@RequestParam Long id,
                                          @RequestParam(required = false) String titleFilter,
                                          @RequestParam(required = false) BigDecimal costFilter,
                                          @RequestParam(required = false) Optional<Integer> page,
@@ -52,12 +69,15 @@ public class ProductResource {
        return requestOptimization(titleFilter, costFilter, page, size);
     }
 
-    private List<ProductDto> requestOptimization(String titleFilter,BigDecimal costFilter, Optional<Integer> page, Optional<Integer> size){
+    private Page<ProductDto> requestOptimization(String titleFilter,BigDecimal costFilter, Optional<Integer> page, Optional<Integer> size){
         int pageValue = page.orElse(1) - 1;
         int sizeValue = size.orElse(5);
 
         Page<ProductDto> allByFilter = productService.findAllByFilter(titleFilter, costFilter, pageValue, sizeValue);
-        List<ProductDto> dto = allByFilter.stream().toList();
-        return dto;
+
+        return allByFilter;
     }
+
+
+
 }

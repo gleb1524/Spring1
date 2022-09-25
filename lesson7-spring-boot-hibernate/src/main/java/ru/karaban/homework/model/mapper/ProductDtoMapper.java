@@ -11,6 +11,5 @@ public interface ProductDtoMapper {
 
     ProductDto map(Product product);
 
-    @Mapping(target = "id", ignore = true)
     Product map(ProductDto productDto);
 }

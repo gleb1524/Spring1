@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import {RouterModule, Routes} from "@angular/router";
 import {ProductListComponent} from "./product-list/product-list.component";
 import {ProductFormComponent} from "./product-form/product-form.component";
+import {ProductServiceComponent} from "./product-service/product-service.component";
 
 const routes: Routes = [
   {path: "", pathMatch:"full", redirectTo:"product"},
