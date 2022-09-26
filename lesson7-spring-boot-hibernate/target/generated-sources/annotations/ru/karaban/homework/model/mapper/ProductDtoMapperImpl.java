@@ -7,7 +7,7 @@ import ru.karaban.homework.model.dto.ProductDto;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-09-12T12:14:03+0300",
+    date = "2022-09-20T16:58:52+0300",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 17.0.4 (Oracle Corporation)"
 )
 @Component
@@ -21,12 +21,14 @@ public class ProductDtoMapperImpl implements ProductDtoMapper {
 
         ProductDto productDto = new ProductDto();
 
-        productDto.setId( product.getId() );
         if ( product.getTitle() != null ) {
             productDto.setTitle( product.getTitle() );
         }
         if ( product.getCost() != null ) {
             productDto.setCost( product.getCost() );
+        }
+        if ( product.getId() != null ) {
+            productDto.setId( product.getId() );
         }
 
         return productDto;
@@ -40,6 +42,9 @@ public class ProductDtoMapperImpl implements ProductDtoMapper {
 
         Product product = new Product();
 
+        if ( productDto.getId() != null ) {
+            product.setId( productDto.getId() );
+        }
         if ( productDto.getTitle() != null ) {
             product.setTitle( productDto.getTitle() );
         }
